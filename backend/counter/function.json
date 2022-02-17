@@ -1,0 +1,38 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get",
+        "post"
+      ]
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "in",
+      "name": "indoc",
+      "databaseName": "pdsresume",
+      "collectionName": "counter",
+      "connectionStringSetting": "ConnectionString",
+      "partitionKey": "id"
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "outdoc",
+      "databaseName": "pdsresume",
+      "collectionName": "counter",
+      "partitionKey": "id",
+      "connectionStringSetting": "ConnectionString"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    }
+  ]
+}

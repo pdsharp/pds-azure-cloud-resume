@@ -1,0 +1,4 @@
+azure-functions
+azure.cosmos
+flake8
+pytest

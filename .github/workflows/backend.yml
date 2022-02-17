@@ -1,0 +1,54 @@
+name: Deploy Python project to Azure Function App
+
+on:
+  push:
+        branches: [ main ]
+        paths:
+        - 'backend/**'
+
+env:
+  AZURE_FUNCTIONAPP_NAME: pdsresumecounter
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './backend'
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZ_APP_CREDS }}
+
+    - name: Install Python Dependencies
+      uses: py-actions/py-dependency-install@v3
+      with:
+        path: "backend/requirements.txt"
+      
+    - name: Lint with flake8
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/counter'
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        popd
+
+    - name: Test with PyTest
+      run: python3 -m pytest -s -vvv
+      
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        
+    # Azure logout
+    - name: logout
+      run: az logout
+      if: always()
