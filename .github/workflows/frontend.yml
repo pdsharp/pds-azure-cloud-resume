@@ -1,4 +1,4 @@
-name: Blob storage/static website CI/CD
+name: frontend ci
 
 on:
     push:
@@ -28,7 +28,6 @@ jobs:
         inlineScript: |
            az cdn endpoint purge --content-paths  "/*" --profile-name "pdsharp" --name "pdsresume" --resource-group "pdsharp"
 
-  # Azure logout
     - name: logout
       run: |
             az logout
