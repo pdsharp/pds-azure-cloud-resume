@@ -10,7 +10,7 @@ def main(
 
     logging.info('Python HTTP trigger function processed a request.')
     try:
-        newcount = indoc[0]['count'] + 2
+        newcount = indoc[0]['count'] + 1
         dbupdate = {"id": '1', "count": newcount}
     except (IndexError):
         dbupdate = {"id": '1', "count": 1}
