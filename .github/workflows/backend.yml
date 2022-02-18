@@ -2,9 +2,9 @@ name: backend ci/cd
 
 on:
   push:
-        branches: [ main ]
-        paths:
-        - 'backend/**'
+    branches: [ main ]
+    paths:
+    - 'backend/**'
 
 env:
   AZURE_FUNCTIONAPP_NAME: pdsresumecounter
